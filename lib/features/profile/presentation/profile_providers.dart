@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../auth/presentation/auth_controller.dart';
+import '../../auth/domain/user_entity.dart';
 import '../domain/profile_repository.dart';
 import '../domain/student_profile_entity.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/auth_repository.dart';
-import '../../domain/user_entity.dart';
+import '../domain/auth_repository.dart';
+import '../domain/user_entity.dart';
 
 // Provider placeholder para o repositório (será injetado depois no main)
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
