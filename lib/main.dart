@@ -5,6 +5,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'features/auth/data/auth_repository_impl.dart';
 import 'features/auth/presentation/auth_screen.dart';
 import 'features/auth/presentation/auth_controller.dart';
+import 'features/profile/data/profile_repository_impl.dart';
+import 'features/profile/presentation/profile_providers.dart';
 import 'features/home/home_screen.dart';
 
 void main() async {
@@ -18,6 +20,7 @@ void main() async {
   runApp(ProviderScope(
     overrides: [
       authRepositoryProvider.overrideWithValue(AuthRepositoryImpl(Supabase.instance.client)),
+      profileRepositoryProvider.overrideWithValue(ProfileRepositoryImpl(Supabase.instance.client)),
     ],
     child: const EasyPeakApp(),
   ));

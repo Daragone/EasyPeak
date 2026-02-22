@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../auth/presentation/auth_controller.dart';
+import '../profile/presentation/profile_providers.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -8,22 +9,30 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userState = ref.watch(authStateProvider);
+    final profileState = ref.watch(currentStudentProfileProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('EasyPeak: Trilha'),
         actions: [
-          Row(
-            children: [
-              const Icon(Icons.whatshot, color: Colors.orange),
-              const SizedBox(width: 4),
-              const Text('12', style: TextStyle(fontWeight: FontWeight.bold)), // Exemplo Streaks
-              const SizedBox(width: 16),
-              const Icon(Icons.star, color: Colors.amber),
-              const SizedBox(width: 4),
-              const Text('450 XP', style: TextStyle(fontWeight: FontWeight.bold)), // Exemplo XP
-              const SizedBox(width: 16),
-            ],
+          profileState.when(
+            data: (profile) => Row(
+              children: [
+                const Icon(Icons.whatshot, color: Colors.orange),
+                const SizedBox(width: 4),
+                Text('${profile?.streakDays ?? 0}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(width: 16),
+                const Icon(Icons.star, color: Colors.amber),
+                const SizedBox(width: 4),
+                Text('${profile?.xp ?? 0} XP', style: const TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(width: 16),
+              ],
+            ),
+            loading: () => const Padding(
+              padding: EdgeInsets.only(right: 16.0),
+              child: Center(child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))),
+            ),
+            error: (_, __) => const SizedBox(),
           ),
           IconButton(
             icon: const Icon(Icons.logout),
@@ -54,9 +63,11 @@ class HomeScreen extends ConsumerWidget {
                   itemCount: 12, // 12 Níveis (Pré-A1 a C2)
                   itemBuilder: (context, index) {
                     final levelNumber = index + 1;
-                    // Lógica mockada de UI
-                    final isUnlocked = levelNumber <= 3; 
-                    final isCurrentLevel = levelNumber == 3;
+                    
+                    final currentDbLevel = profileState.value?.currentLevelId ?? 1;
+                    
+                    final isUnlocked = levelNumber <= currentDbLevel; 
+                    final isCurrentLevel = levelNumber == currentDbLevel;
 
                     return Card(
                       color: isUnlocked ? null : Colors.grey.shade300,
