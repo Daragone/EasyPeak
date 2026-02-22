@@ -12,7 +12,7 @@ class RightSidebar extends ConsumerWidget {
 
     return Container(
       padding: const EdgeInsets.only(top: 24, left: 24, right: 24),
-      color: Colors.white,
+      color: AppColors.background,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -22,18 +22,18 @@ class RightSidebar extends ConsumerWidget {
             children: [
               _StatItem(
                 icon: Icons.whatshot_rounded, 
-                color: Colors.orange, 
+                color: AppColors.warning, 
                 value: profileState.value?.streakDays.toString() ?? '0'
               ),
               _StatItem(
                 icon: Icons.diamond_rounded, 
-                color: Colors.blue, 
+                color: AppColors.primary, 
                 value: profileState.value?.xp.toString() ?? '0'
               ),
               const CircleAvatar(
                 radius: 16,
-                backgroundColor: AppColors.primary,
-                child: Icon(Icons.person, color: Colors.white, size: 20),
+                backgroundColor: AppColors.surfaceLight,
+                child: Icon(Icons.person, color: AppColors.textPrimary, size: 20),
               )
             ],
           ),
@@ -44,13 +44,14 @@ class RightSidebar extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade300, width: 2),
+              color: AppColors.surface,
+              border: Border.all(color: AppColors.border, width: 2),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('LIGAS', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 13)),
+                const Text('LIGAS', style: TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.bold, fontSize: 13)),
                 const SizedBox(height: 12),
                 Row(
                   children: [
@@ -58,9 +59,9 @@ class RightSidebar extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
-                          Text('Quem sabe da próxima vez!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                          Text('Quem sabe da próxima vez!', style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 15)),
                           SizedBox(height: 8),
-                          Text('Você terminou na posição 20 e caiu pra Divisão Esmeralda.', style: TextStyle(color: Colors.grey, fontSize: 13)),
+                          Text('Você terminou na posição 20 e caiu pra Divisão Esmeralda.', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
                         ],
                       ),
                     ),
@@ -73,7 +74,7 @@ class RightSidebar extends ConsumerWidget {
                   width: double.infinity,
                   child: TextButton(
                     onPressed: () {},
-                    child: const Text('VER LIGAS', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                    child: const Text('VER LIGAS', style: TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold)),
                   ),
                 )
               ],
@@ -86,7 +87,8 @@ class RightSidebar extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade300, width: 2),
+              color: AppColors.surface,
+              border: Border.all(color: AppColors.border, width: 2),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
@@ -95,7 +97,7 @@ class RightSidebar extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Missões do dia', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                    const Text('Missões do dia', style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16)),
                     TextButton(
                       onPressed: () {},
                       child: const Text('VER TODAS', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
@@ -105,18 +107,18 @@ class RightSidebar extends ConsumerWidget {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    const Icon(Icons.bolt_rounded, color: Colors.amber, size: 32),
+                    const Icon(Icons.bolt_rounded, color: AppColors.warning, size: 32),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Ganhe 10 XP', style: TextStyle(fontWeight: FontWeight.bold)),
+                          const Text('Ganhe 10 XP', style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold)),
                           const SizedBox(height: 8),
                           LinearProgressIndicator(
                             value: 0.1,
-                            backgroundColor: Colors.grey.shade200,
-                            color: Colors.amber,
+                            backgroundColor: AppColors.border,
+                            color: AppColors.warning,
                             minHeight: 12,
                             borderRadius: BorderRadius.circular(6),
                           ),

@@ -4,6 +4,7 @@ import '../auth/presentation/auth_controller.dart';
 import '../auth/domain/user_entity.dart';
 import '../profile/presentation/profile_providers.dart';
 import 'presentation/widgets/duolingo_scaffold.dart';
+import '../../core/constants/app_colors.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -22,13 +23,14 @@ class HomeScreen extends ConsumerWidget {
         return DuolingoScaffold(
           child: Column(
             children: [
-              // HEADER DA TRILHA (Section Header Duolingo-style)
+              // HEADER DA TRILHA (Section Header Premium-style)
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 24, left: 16, right: 16),
                 padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
                 decoration: BoxDecoration(
-                  color: Colors.orange.shade500,
+                  color: AppColors.surface,
+                  border: Border.all(color: AppColors.border, width: 2),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Row(
@@ -37,19 +39,19 @@ class HomeScreen extends ConsumerWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [
-                        Text('SEÇÃO 1, UNIDADE 1', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 16)),
+                        Text('ACAMPAMENTO BASE 1', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 14, letterSpacing: 1.5)),
                         SizedBox(height: 8),
-                        Text('Seus primeiros passos rumo à fluência', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22)),
+                        Text('Fundamentos e Foco Neural', style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 22)),
                       ],
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(12)),
+                      decoration: BoxDecoration(color: AppColors.surfaceLight, borderRadius: BorderRadius.circular(12)),
                       child: const Row(
                         children: [
-                          Icon(Icons.menu_book_rounded, color: Colors.white),
+                          Icon(Icons.auto_stories_rounded, color: AppColors.textPrimary),
                           SizedBox(width: 8),
-                          Text('GUIA', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                          Text('GUIA', style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold)),
                         ],
                       ),
                     )
@@ -88,8 +90,8 @@ class HomeScreen extends ConsumerWidget {
           ),
         );
       },
-      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error: (err, stack) => Scaffold(body: Center(child: Text('Erro: $err'))),
+      loading: () => const Scaffold(backgroundColor: AppColors.background, body: Center(child: CircularProgressIndicator(color: AppColors.primary))),
+      error: (err, stack) => Scaffold(backgroundColor: AppColors.background, body: Center(child: Text('Erro: $err', style: const TextStyle(color: AppColors.textPrimary)))),
     );
   }
 
@@ -123,12 +125,12 @@ class _PathNode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bgColor = isCurrentLevel 
-        ? Colors.orange.shade500 
-        : (isUnlocked ? Colors.orange.shade400 : Colors.grey.shade300);
+        ? AppColors.primary // Cyan for current pulse
+        : (isUnlocked ? AppColors.secondary : AppColors.surfaceLight); // Emerald for unlocked, Slate for locked
         
     final shadowColor = isCurrentLevel 
-        ? Colors.orange.shade700 
-        : (isUnlocked ? Colors.orange.shade600 : Colors.grey.shade400);
+        ? AppColors.primary.withOpacity(0.5) 
+        : (isUnlocked ? AppColors.secondary.withOpacity(0.4) : Colors.transparent);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 24), // Spacing between nodes
@@ -139,16 +141,19 @@ class _PathNode extends StatelessWidget {
             // The Crown indicating current level
             if (isCurrentLevel) ...[
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.background,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade300, width: 2),
+                  border: Border.all(color: AppColors.primary, width: 2),
+                  boxShadow: [
+                    BoxShadow(color: AppColors.primary.withOpacity(0.3), blurRadius: 10, spreadRadius: 2)
+                  ]
                 ),
-                child: const Text('COMEÇAR', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
+                child: const Text('INICIAR CIRCUITO', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
               ),
               const SizedBox(height: 8),
-              const Icon(Icons.arrow_drop_down, color: Colors.orange, size: 32),
+              const Icon(Icons.arrow_drop_down, color: AppColors.primary, size: 32),
             ],
 
             // The Node Button
@@ -160,19 +165,24 @@ class _PathNode extends StatelessWidget {
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                  color: bgColor,
+                  color: isUnlocked ? bgColor : AppColors.surface,
                   shape: BoxShape.circle,
-                  boxShadow: [
+                  border: Border.all(
+                    color: isUnlocked ? Colors.transparent : AppColors.border,
+                    width: 3,
+                  ),
+                  boxShadow: isUnlocked ? [
                     BoxShadow(
                       color: shadowColor,
-                      offset: const Offset(0, 6), // 3D effect identical to Duolingo
+                      blurRadius: 15,
+                      offset: const Offset(0, 0), // Glowing effect instead of solid 3d shadow
                     ),
-                  ],
+                  ] : null,
                 ),
                 child: Center(
                   child: Icon(
-                    isCurrentLevel ? Icons.star_rounded : (isUnlocked ? Icons.check_rounded : Icons.lock_rounded),
-                    color: isUnlocked ? Colors.white : Colors.grey.shade500,
+                    isCurrentLevel ? Icons.bolt_rounded : (isUnlocked ? Icons.check_rounded : Icons.lock_rounded),
+                    color: isUnlocked ? AppColors.background : AppColors.textSecondary,
                     size: 40,
                   ),
                 ),

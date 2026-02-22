@@ -11,7 +11,7 @@ class DuolingoScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.background,
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isDesktop = constraints.maxWidth >= 1024;
@@ -27,7 +27,7 @@ class DuolingoScaffold extends StatelessWidget {
                   child: LeftSidebar(isCollapsed: !isDesktop),
                 ),
               if (isDesktop || isTablet) 
-                const VerticalDivider(width: 1, color: Color(0xFFE5E5E5)),
+                const VerticalDivider(width: 1, color: AppColors.border),
 
               // 2. MAIN CONTENT (Path)
               Expanded(
@@ -41,7 +41,7 @@ class DuolingoScaffold extends StatelessWidget {
 
               // 3. RIGHT SIDEBAR (Gamification)
               if (isDesktop) ...[
-                const VerticalDivider(width: 1, color: Color(0xFFE5E5E5)),
+                const VerticalDivider(width: 1, color: AppColors.border),
                 SizedBox(
                   width: 330,
                   child: RightSidebar(),
@@ -65,8 +65,9 @@ class BottomNavMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
+      backgroundColor: AppColors.surface,
       selectedItemColor: AppColors.primary,
-      unselectedItemColor: Colors.grey,
+      unselectedItemColor: AppColors.textSecondary,
       showSelectedLabels: false,
       showUnselectedLabels: false,
       items: const [

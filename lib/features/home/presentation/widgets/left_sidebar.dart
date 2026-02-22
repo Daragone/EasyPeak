@@ -10,7 +10,7 @@ class LeftSidebar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-      color: Colors.white,
+      color: AppColors.surface, // Slate 800 background
       child: Column(
         crossAxisAlignment: isCollapsed ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         children: [
@@ -60,22 +60,22 @@ class _SidebarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isSelected ? AppColors.primary : Colors.grey.shade600;
-    final bgColor = isSelected ? AppColors.primary.withOpacity(0.1) : Colors.transparent;
+    final color = isSelected ? AppColors.primary : AppColors.textSecondary;
+    final bgColor = isSelected ? AppColors.primary.withOpacity(0.15) : Colors.transparent;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(16),
-        border: isSelected ? Border.all(color: AppColors.primary.withOpacity(0.3), width: 1.5) : Border.all(color: Colors.transparent, width: 1.5),
+        border: isSelected ? Border.all(color: AppColors.primary.withOpacity(0.4), width: 1.5) : Border.all(color: Colors.transparent, width: 1.5),
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
           onTap: () {},
-          hoverColor: Colors.grey.shade100,
+          hoverColor: AppColors.surfaceLight,
           child: Padding(
             padding: EdgeInsets.symmetric(
               vertical: 12, 
