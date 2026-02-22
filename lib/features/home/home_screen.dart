@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../auth/presentation/auth_controller.dart';
 import '../auth/domain/user_entity.dart';
 import '../profile/presentation/profile_providers.dart';
+import 'presentation/widgets/duolingo_scaffold.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -12,101 +13,83 @@ class HomeScreen extends ConsumerWidget {
     final userState = ref.watch(authStateProvider);
     final profileState = ref.watch(currentStudentProfileProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('EasyPeak: Trilha'),
-        actions: [
-          profileState.when(
-            data: (profile) => Row(
-              children: [
-                const Icon(Icons.whatshot, color: Colors.orange),
-                const SizedBox(width: 4),
-                Text('${profile?.streakDays ?? 0}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(width: 16),
-                const Icon(Icons.star, color: Colors.amber),
-                const SizedBox(width: 4),
-                Text('${profile?.xp ?? 0} XP', style: const TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(width: 16),
-              ],
-            ),
-            loading: () => const Padding(
-              padding: EdgeInsets.only(right: 16.0),
-              child: Center(child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))),
-            ),
-            error: (_, __) => const SizedBox(),
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              ref.read(authControllerProvider.notifier).signOut();
-            },
-          )
-        ],
-      ),
-      body: userState.when(
-        data: (user) {
-          if (user == null) {
-            return const Center(child: Text('Redirecionando para login...'));
-          }
+    return userState.when(
+      data: (user) {
+        if (user == null) {
+          return const Scaffold(body: Center(child: Text('Redirecionando para login...')));
+        }
 
-          return Column(
+        return DuolingoScaffold(
+          child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'Bem-vindo, ${user.name ?? user.email}!',
-                  style: Theme.of(context).textTheme.titleLarge,
+              // HEADER DA TRILHA (Section Header Duolingo-style)
+              Container(
+                width: double.infinity,
+                margin: const EdgeInsets.only(top: 24, left: 16, right: 16),
+                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade500,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text('SEÇÃO 1, UNIDADE 1', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 16)),
+                        SizedBox(height: 8),
+                        Text('Seus primeiros passos rumo à fluência', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22)),
+                      ],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(12)),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.menu_book_rounded, color: Colors.white),
+                          SizedBox(width: 8),
+                          Text('GUIA', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
               ),
+              
+              const SizedBox(height: 48),
+
+              // THE PATH / TRILHA
               Expanded(
                 child: ListView.builder(
-                  padding: const EdgeInsets.all(16.0),
-                  itemCount: 12, // 12 Níveis (Pré-A1 a C2)
+                  padding: const EdgeInsets.only(bottom: 64),
+                  itemCount: 12,
                   itemBuilder: (context, index) {
                     final levelNumber = index + 1;
-                    
                     final currentDbLevel = profileState.value?.currentLevelId ?? 1;
                     
                     final isUnlocked = levelNumber <= currentDbLevel; 
                     final isCurrentLevel = levelNumber == currentDbLevel;
 
-                    return Card(
-                      color: isUnlocked ? null : Colors.grey.shade300,
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: isCurrentLevel
-                              ? Colors.deepPurple
-                              : (isUnlocked ? Colors.green : Colors.grey),
-                          child: Icon(
-                            isCurrentLevel
-                                ? Icons.play_arrow
-                                : (isUnlocked ? Icons.check : Icons.lock),
-                            color: Colors.white,
-                          ),
-                        ),
-                        title: Text('Nível $levelNumber - ${_getLevelName(levelNumber)}'),
-                        subtitle: Text(
-                          isCurrentLevel
-                              ? 'Progresso atual'
-                              : (isUnlocked ? 'Concluído' : 'Bloqueado'),
-                        ),
-                        onTap: isUnlocked
-                            ? () {
-                                // Navegar para a tela de lições
-                              }
-                            : null,
-                      ),
+                    // Calculates a "zig-zag" offset based on index
+                    final double offsetX = (index % 4 == 1 || index % 4 == 2) ? 40.0 : -40.0;
+                    
+                    return _PathNode(
+                      levelNumber: levelNumber,
+                      offsetX: (index % 2 == 1) ? offsetX : 0.0, // simplified zig zag
+                      isUnlocked: isUnlocked,
+                      isCurrentLevel: isCurrentLevel,
+                      name: _getLevelName(levelNumber),
                     );
                   },
                 ),
               ),
             ],
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Erro: $err')),
-      ),
+          ),
+        );
+      },
+      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (err, stack) => Scaffold(body: Center(child: Text('Erro: $err'))),
     );
   }
 
@@ -119,5 +102,85 @@ class HomeScreen extends ConsumerWidget {
     ];
     if (level < 1 || level > 12) return 'Desconhecido';
     return levels[level - 1];
+  }
+}
+
+class _PathNode extends StatelessWidget {
+  final int levelNumber;
+  final double offsetX;
+  final bool isUnlocked;
+  final bool isCurrentLevel;
+  final String name;
+
+  const _PathNode({
+    required this.levelNumber,
+    required this.offsetX,
+    required this.isUnlocked,
+    required this.isCurrentLevel,
+    required this.name,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final bgColor = isCurrentLevel 
+        ? Colors.orange.shade500 
+        : (isUnlocked ? Colors.orange.shade400 : Colors.grey.shade300);
+        
+    final shadowColor = isCurrentLevel 
+        ? Colors.orange.shade700 
+        : (isUnlocked ? Colors.orange.shade600 : Colors.grey.shade400);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 24), // Spacing between nodes
+      child: Transform.translate(
+        offset: Offset(offsetX, 0),
+        child: Column(
+          children: [
+            // The Crown indicating current level
+            if (isCurrentLevel) ...[
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade300, width: 2),
+                ),
+                child: const Text('COMEÇAR', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(height: 8),
+              const Icon(Icons.arrow_drop_down, color: Colors.orange, size: 32),
+            ],
+
+            // The Node Button
+            GestureDetector(
+              onTap: isUnlocked ? () {
+                // Navegar para lição
+              } : null,
+              child: Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: bgColor,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: shadowColor,
+                      offset: const Offset(0, 6), // 3D effect identical to Duolingo
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Icon(
+                    isCurrentLevel ? Icons.star_rounded : (isUnlocked ? Icons.check_rounded : Icons.lock_rounded),
+                    color: isUnlocked ? Colors.white : Colors.grey.shade500,
+                    size: 40,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
