@@ -30,6 +30,14 @@ class HomeScreen extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
                 decoration: BoxDecoration(
                   color: AppColors.surface,
+                  image: DecorationImage(
+                    image: const AssetImage('assets/images/mascot.png'),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      AppColors.background.withOpacity(0.65), 
+                      BlendMode.darken,
+                    ),
+                  ),
                   border: Border.all(color: AppColors.border, width: 2),
                   borderRadius: BorderRadius.circular(16),
                 ),

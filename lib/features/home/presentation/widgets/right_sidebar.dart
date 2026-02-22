@@ -30,10 +30,17 @@ class RightSidebar extends ConsumerWidget {
                 color: AppColors.primary, 
                 value: profileState.value?.xp.toString() ?? '0'
               ),
-              const CircleAvatar(
-                radius: 16,
-                backgroundColor: AppColors.surfaceLight,
-                child: Icon(Icons.person, color: AppColors.textPrimary, size: 20),
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.primary, width: 2),
+                  image: const DecorationImage(
+                    image: AssetImage('assets/images/mascot.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               )
             ],
           ),

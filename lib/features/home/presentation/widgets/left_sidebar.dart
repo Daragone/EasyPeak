@@ -17,15 +17,23 @@ class LeftSidebar extends ConsumerWidget {
           // Logo
           Padding(
             padding: EdgeInsets.symmetric(horizontal: isCollapsed ? 0 : 16.0, vertical: 8.0),
-            child: Text(
-              isCollapsed ? 'EP' : 'EasyPeak',
-              style: TextStyle(
-                color: AppColors.primary,
-                fontSize: isCollapsed ? 28 : 32,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -1,
-              ),
-            ),
+            child: isCollapsed 
+                ? Image.asset('assets/images/mascot.png', width: 48, height: 48)
+                : Row(
+                    children: [
+                      Image.asset('assets/images/mascot.png', width: 48, height: 48),
+                      const SizedBox(width: 12),
+                      const Text(
+                        'EasyPeak',
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: -1,
+                        ),
+                      ),
+                    ],
+                  ),
           ),
           const SizedBox(height: 32),
 
